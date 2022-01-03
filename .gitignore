@@ -1,0 +1,7 @@
+/.vscode
+/geckodriver.exe
+/geckodriver.log
+/parse.py
+/parser.py
+/test_data.xlsx
+/venv
