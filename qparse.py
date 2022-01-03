@@ -53,8 +53,9 @@ def main():
         driver.find_elements_by_xpath("//ul[@id='ui-id-4']/li/div")[0].click()
     else:
         driver.find_elements_by_xpath("//ul[@id='ui-id-8']/li/div")[0].click()
-
-    time.sleep(1000)
+    
+    driver.find_elements_by_xpath("//button[contains(text(),'НАЙТИ')]")[0].click()
+    time.sleep(5)
 
     driver.close()
 
