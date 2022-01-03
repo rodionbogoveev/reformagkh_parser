@@ -5,30 +5,61 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 
-def get_region(driver):
-    driver.find_element_by_name('region').send_keys(input('Введите регион: '))
-    time.sleep(1)
-    regions = driver.find_elements_by_xpath("//ul[@id='ui-id-1']/li/div")
-    return regions
+query = {
+    'region': 'Санкт-Петербург',
+    'settlement': '',
+    'street': 'Репищева ул',
+    'house': 'Дом 21 Корпус 1'
+}
+
+# query = {
+#     'region': 'Калмыкия', 
+#     'settlement': 'Большой Царын п', 
+#     'street': 'С.Убушиева ул', 
+#     'house': 'Дом 9'
+# }
+
 
 
 def main():
-    trying = 3
     driver = webdriver.Firefox()
     driver.get('https://www.reformagkh.ru/search/houses-advanced')
-    while trying != 0:
-        regions = get_region(driver)
-        if len(regions) == 0:
-            trying += -1
-            print('\nПо вашему запросу регион не найден.\n')
-            driver.find_element_by_name('region').clear()
-        else:
-            trying = 0
-            regions[0].click()
 
-    time.sleep(10)
+    # Ввод региона
+    driver.find_element_by_name('region').send_keys(query['region'])
+    time.sleep(1)
+    driver.find_elements_by_xpath("//ul[@id='ui-id-1']/li/div")[0].click()
+
+    # Ввод населенного пункта
+    if not query['settlement']:
+        pass
+    else:
+        driver.find_element_by_name('settlement').send_keys(query['settlement'])
+        time.sleep(1)
+        driver.find_elements_by_xpath("//ul[@id='ui-id-3']/li/div")[0].click()
+    
+    # Ввод улицы
+    driver.find_element_by_name('street').send_keys(query['street'])
+    time.sleep(1)
+    if not query['settlement']:
+        driver.find_elements_by_xpath("//ul[@id='ui-id-3']/li/div")[0].click()
+    else:
+        driver.find_elements_by_xpath("//ul[@id='ui-id-7']/li/div")[0].click()
+    
+    # Ввод дома
+    driver.find_element_by_name('house').send_keys(query['house'])
+    time.sleep(1)
+    if not query['settlement']:
+        driver.find_elements_by_xpath("//ul[@id='ui-id-4']/li/div")[0].click()
+    else:
+        driver.find_elements_by_xpath("//ul[@id='ui-id-8']/li/div")[0].click()
+
+    time.sleep(1000)
 
     driver.close()
+
+
+main()
 
 
 def open_excel():
@@ -52,7 +83,6 @@ def open_excel():
             'street': street,
             'house': house,
         }
-        print(query)
 
 open_excel()
 
