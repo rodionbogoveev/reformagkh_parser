@@ -1,28 +1,22 @@
 import openpyxl
 import time
+from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 
-query = {
-    'region': 'Санкт-Петербург',
-    'settlement': '',
-    'street': 'Репищева ул',
-    'house': 'Дом 21 Корпус 1'
-}
+useragent = UserAgent()
+options = webdriver.FirefoxOptions()
+options.set_preference('general.useragent.override', useragent.random)
 
-# query = {
-#     'region': 'Калмыкия', 
-#     'settlement': 'Большой Царын п', 
-#     'street': 'С.Убушиева ул', 
-#     'house': 'Дом 9'
-# }
+
+query = {'region': 'Коми', 'settlement': 'Печора г', 'street': 'Печорский пр-кт', 'house': 'Дом 116'}
 
 
 
 def main():
-    driver = webdriver.Firefox()
+    driver = webdriver.Firefox(options=options)
     driver.get('https://www.reformagkh.ru/search/houses-advanced')
 
     # Ввод региона
@@ -35,8 +29,8 @@ def main():
         pass
     else:
         driver.find_element_by_name('settlement').send_keys(query['settlement'])
-        time.sleep(1)
-        driver.find_elements_by_xpath("//ul[@id='ui-id-3']/li/div")[0].click()
+        time.sleep(3)
+        driver.find_elements_by_xpath("//*[@id='ui-id-3']")[0].click()
     
     # Ввод улицы
     driver.find_element_by_name('street').send_keys(query['street'])
@@ -54,10 +48,20 @@ def main():
     else:
         driver.find_elements_by_xpath("//ul[@id='ui-id-8']/li/div")[0].click()
     
+    # Поиск
     driver.find_elements_by_xpath("//button[contains(text(),'НАЙТИ')]")[0].click()
-    time.sleep(5)
+
+    # Переход по ссылке
+    driver.find_elements_by_xpath("/html/body/section[2]/div/table/tbody/tr/td[1]/a")[0].click()
+    
+    # Переход на вкладку "Паспорт"
+    driver.find_elements_by_xpath("/html/body/section[4]/div/a[1]")[0].click()
+    
+    # Конструктивные элементы дома
+    driver.find_elements_by_xpath("//*[@id='constructive-tab']")[0].click()
 
     driver.close()
+    return
 
 
 main()
@@ -84,8 +88,11 @@ def open_excel():
             'street': street,
             'house': house,
         }
+        print(query)
+        # main(query)
 
-open_excel()
+
+# open_excel()
 
 
 
