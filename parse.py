@@ -36,9 +36,11 @@ def get_links(html):
     # return cars
 
 
-def get_general_information():
-    pass
-
+def get_gen_info(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    items = soup.find('div', class_='col-9 tab-content')
+    item = items.find(string='Год ввода дома в эксплуатацию').find_parent('td').find_next().text.strip()
+    print(item)
 
 def parse(query):
     # Получаем ссылку на запрашиваемый дом
@@ -49,11 +51,17 @@ def parse(query):
         print('Сайт не отвечает')
     if len(links) > 10:
         print('Слишком большая выборка, уточните данные о доме.')
+        link = None
     else:
-        link = links[0]
+        link = links[0].replace('view', 'passport')
 
     # Получаем данные о доме
-    html_gen_info = get_html(URL + link)
+    if link is not None:
+        html_gen_info = get_html(URL + link)
+        if html_gen_info.status_code == 200:
+            data = get_gen_info(html_gen_info.text)
+        else:
+            print('Сайт не отвечает')
 
 
 query = {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1'}
