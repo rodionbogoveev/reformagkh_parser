@@ -39,8 +39,23 @@ def get_links(html):
 def get_gen_info(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='col-9 tab-content')
-    item = items.find(string='Год ввода дома в эксплуатацию').find_parent('td').find_next().text.strip()
-    print(item)
+    # with open('page.html', 'w') as file:
+    #     file.write(items.prettify())
+    year = items.find(string='Год ввода дома в эксплуатацию').find_parent('td').find_next().text.strip()
+    floors = items.find(string='Количество этажей, ед.').find_parent('td').find_next().text.strip()
+    updating = items.find(string='По данным Фонда ЖКХ информация последний раз актуализировалась:').find_parent('td').find_next().text.strip()
+    series = items.find(string='Серия, тип постройки здания').find_parent('td').find_next().text.strip()
+    type_of_building = items.find(string='Тип дома').find_parent('td').find_next_siblings()[-1].text.strip()
+    emergency = items.find(string='Факт признания дома аварийным')
+    if emergency is not None:
+        emergency = emergency.find_parent('td').find_next_siblings()[-1].text.strip()
+    cadastre = items.find(string='Кадастровый номер земельного участка')
+    if cadastre is not None:
+        cadastre = cadastre.find_parent('td').find_next_siblings()[-1].text.strip()
+    floor = items.find(string='Стены и перекрытия. Тип перекрытий').find_parent('td').find_next_siblings()[-1].text.strip()
+    walls = items.find(string='Стены и перекрытия. Материал несущих стен').find_parent('td').find_next_siblings()[-1].text.strip()
+    print(year, floors, updating, series, type_of_building, emergency, cadastre, floor, walls)
+
 
 def parse(query):
     # Получаем ссылку на запрашиваемый дом
@@ -64,5 +79,10 @@ def parse(query):
             print('Сайт не отвечает')
 
 
-query = {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1'}
-parse(query)
+query = [
+    {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1'},
+    {'query': 'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42'},
+]
+
+for i in query:
+    parse(i)
