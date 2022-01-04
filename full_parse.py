@@ -1,4 +1,3 @@
-import openpyxl
 import time
 from fake_useragent import UserAgent
 from selenium import webdriver
@@ -12,8 +11,10 @@ options.set_preference('general.useragent.override', useragent.random)
 
 
 # query = {'region': 'Санкт-Петербург', 'settlement': '', 'street': 'Репищева ул', 'house': 'Дом 21 Корпус 1'}
+query = 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1'
+
 # query = {'region': 'Коми', 'settlement': 'Печора г', 'street': 'Печорский пр-кт', 'house': 'Дом 116'}
-query = {'region': 'Санкт-Петербург', 'settlement': '', 'street': '6-я В.О. линия', 'house': 'Дом 47'}
+# query = {'region': 'Санкт-Петербург', 'settlement': '', 'street': '6-я В.О. линия', 'house': 'Дом 47'}
 # query = {'region': 'Москва', 'settlement': '', 'street': 'Яковоапостольский пер', 'house': 'Дом 9 Корпус 2'}
 # query = {'region': 'Татарстан', 'settlement': 'Осиново с', 'street': 'Кооперативная ул', 'house': 'Дом 16А'}
 
@@ -22,18 +23,19 @@ def main():
     driver = webdriver.Firefox(options=options)
     # driver.maximize_window()
     action = webdriver.ActionChains(driver)
-    # driver.get('https://www.reformagkh.ru/')
-    # time.sleep(10)
-    driver.get('https://www.reformagkh.ru/search/houses-advanced')
+    driver.get('https://www.reformagkh.ru')
+    time.sleep(10)
     driver.find_elements_by_xpath("/html/body/div[4]/div/div/div[2]/div/button")[0].click()
     time.sleep(3)
 
-    # Ввод региона
-    driver.find_element_by_name('region').send_keys(query['region'])
+    # Ввод запроса
+    driver.find_element_by_name('query').send_keys(query)
     time.sleep(1)
-    driver.find_elements_by_xpath("//ul[@id='ui-id-1']/li/div")[0].click()
+    driver.find_elements_by_xpath('/html/body/section[1]/div/div[3]/form/div[2]/input')[0].click()
+    # driver.find_elements_by_xpath('//*[@id="ui-id-1"]')[0].click()
     time.sleep(1)
 
+def aaa():
     # Ввод населенного пункта
     if not query['settlement']:
         pass
@@ -81,32 +83,6 @@ def main():
 main()
 
 
-def open_excel():
-    data = openpyxl.open('test_data.xlsx', read_only=True)
-    sheet = data.active
-    for row in range(2, sheet.max_row + 1):
-        row = sheet[row]
-        region = row[2].value.split()[0]
-        settlement = row[4].value if row[4].value is not None else ''
-        settlement_type = f' {row[3].value}' if row[3].value is not None else ''
-        settlement = settlement + settlement_type
-        street = str(row[6].value) if row[6].value != None else ''
-        street_type = f' {row[5].value}' if row[5].value is not None else ''
-        street = street + street_type
-        house = f'Дом {row[7].value}' if row[7].value is not None else ''
-        block = f' Корпус {row[8].value}' if row[8].value is not None else ''
-        house = str(house) + block
-        query = {
-            'region': region,
-            'settlement': settlement,
-            'street': street,
-            'house': house,
-        }
-        print(query)
-        # main(query)
-
-
-# open_excel()
 
 
 
@@ -115,5 +91,4 @@ def open_excel():
 
 
 
-# if __name__ == '__main__':
-#     main()
+
