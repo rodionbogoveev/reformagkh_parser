@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+from urllib.parse import quote
 
 
 URL = 'https://www.reformagkh.ru'
@@ -54,9 +55,12 @@ def get_gen_info(html):
     return data
 
 
+# def parse(query):
 def parse(query):
     # Получаем ссылку на запрашиваемый дом
-    html_house = get_html(URL + SEARCH, query)
+    # html_house = get_html(URL + SEARCH, query)
+    a = quote(query)
+    html_house = get_html(f'https://www.reformagkh.ru/search/houses?query={a}')
     if html_house.status_code == 200:
         links = get_links(html_house.text)
     else:
@@ -76,10 +80,13 @@ def parse(query):
         else:
             print('Сайт не отвечает')
 
-
+# query = [
+#     {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1',},
+#     {'query': 'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42'},
+# ]
 query = [
-    {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1'},
-    {'query': 'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42'},
+    'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1',
+    'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42',
 ]
 
 for i in query:
