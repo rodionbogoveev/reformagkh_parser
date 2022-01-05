@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
+
 
 URL = 'https://www.reformagkh.ru'
 SEARCH = '/search/houses'
-HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0', 'accept': '*/*'}
+HEADERS = {'user-agent': UserAgent().random, 'accept': '*/*'}
 
 
 def get_html(url, query=None):
@@ -18,22 +20,6 @@ def get_links(html):
     for i in items:
         links.append(i.get('href'))
     return links
-
-    # cars = []
-    # for item in items:
-    #     uah_price = item.find('span', class_='size15')
-    #     if uah_price:
-    #         uah_price = uah_price.get_text().replace(' • ', '')
-    #     else:
-    #         uah_price = 'Цену уточняйте'
-    #     cars.append({
-    #         'title': item.find('div', class_='na-card-name').get_text(strip=True),
-    #         'link': HOST + item.find('span', class_='link').get('href'),
-    #         'usd_price': item.find('strong', class_='green').get_text(),
-    #         'uah_price': uah_price,
-    #         'city': item.find('svg', class_='svg_i16_pin').find_next('span').get_text(),
-    #     })
-    # return cars
 
 
 def get_gen_info(html):
@@ -54,7 +40,18 @@ def get_gen_info(html):
         cadastre = cadastre.find_parent('td').find_next_siblings()[-1].text.strip()
     floor = items.find(string='Стены и перекрытия. Тип перекрытий').find_parent('td').find_next_siblings()[-1].text.strip()
     walls = items.find(string='Стены и перекрытия. Материал несущих стен').find_parent('td').find_next_siblings()[-1].text.strip()
-    print(year, floors, updating, series, type_of_building, emergency, cadastre, floor, walls)
+    data = {
+        'year': year,
+        'floors': floors,
+        'updating': updating,
+        'series': series,
+        'type_of_building': type_of_building,
+        'emergency': emergency,
+        'cadastre': cadastre,
+        'floor': floor,
+        'walls': walls,
+    }
+    return data
 
 
 def parse(query):
@@ -69,12 +66,13 @@ def parse(query):
         link = None
     else:
         link = links[0].replace('view', 'passport')
-
     # Получаем данные о доме
     if link is not None:
         html_gen_info = get_html(URL + link)
         if html_gen_info.status_code == 200:
             data = get_gen_info(html_gen_info.text)
+            with open('result.txt', 'a') as file:
+                file.write(f'{data}\n')
         else:
             print('Сайт не отвечает')
 
@@ -86,3 +84,7 @@ query = [
 
 for i in query:
     parse(i)
+# data = {'year': '1962', 'floors': '2', 'updating': '18.12.2021', 'series': 'кирпичный', 'type_of_building': 'Многоквартирный дом', 'emergency': 'Да', 'cadastre': '22:69:030527:56', 'floor': 'Деревянные', 'walls': 'Кирпич'}
+
+# with open('result.txt', 'a') as file:
+#     file.write(f'{data}\n')
