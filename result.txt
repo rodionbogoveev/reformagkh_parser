@@ -1,0 +1,2 @@
+{'year': '1993', 'floors': '16', 'updating': '04.12.2021', 'series': '137', 'type_of_building': 'Многоквартирный дом', 'emergency': None, 'cadastre': None, 'floor': 'Железобетонные', 'walls': 'Панельные'}
+{'year': '1916', 'floors': '1', 'updating': '04.12.2021', 'series': 'Кирпичный', 'type_of_building': 'Многоквартирный дом', 'emergency': None, 'cadastre': '78:06:0002025:2020', 'floor': 'Смешанные', 'walls': 'Кирпич'}

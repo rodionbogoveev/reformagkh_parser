@@ -5,7 +5,6 @@ from urllib.parse import quote
 
 
 URL = 'https://www.reformagkh.ru'
-SEARCH = '/search/houses'
 HEADERS = {'user-agent': UserAgent().random, 'accept': '*/*'}
 
 
@@ -55,10 +54,8 @@ def get_gen_info(html):
     return data
 
 
-# def parse(query):
 def parse(query):
     # Получаем ссылку на запрашиваемый дом
-    # html_house = get_html(URL + SEARCH, query)
     a = quote(query)
     html_house = get_html(f'https://www.reformagkh.ru/search/houses?query={a}')
     if html_house.status_code == 200:
@@ -68,10 +65,13 @@ def parse(query):
     if len(links) > 10:
         print('Слишком большая выборка, уточните данные о доме.')
         link = None
+    elif not links:
+        print('По заданному адресу не найдено ни одного дома.')
+        link = None
     else:
         link = links[0].replace('view', 'passport')
     # Получаем данные о доме
-    if link is not None:
+    if link:
         html_gen_info = get_html(URL + link)
         if html_gen_info.status_code == 200:
             data = get_gen_info(html_gen_info.text)
@@ -79,19 +79,15 @@ def parse(query):
                 file.write(f'{data}\n')
         else:
             print('Сайт не отвечает')
+    else:
+        print('Не удалось получить данные о доме.')
 
-# query = [
-#     {'query': 'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1',},
-#     {'query': 'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42'},
-# ]
 query = [
-    'г. Санкт-Петербург, ул. Репищева, д. 21, к. 1',
-    'край. Алтайский, г. Новоалтайск, ул. Белякова, д. 42',
+    'Санкт-Петербург линия 6-я В.О. д 47',
 ]
 
 for i in query:
     parse(i)
-# data = {'year': '1962', 'floors': '2', 'updating': '18.12.2021', 'series': 'кирпичный', 'type_of_building': 'Многоквартирный дом', 'emergency': 'Да', 'cadastre': '22:69:030527:56', 'floor': 'Деревянные', 'walls': 'Кирпич'}
 
 # with open('result.txt', 'a') as file:
 #     file.write(f'{data}\n')
