@@ -26,19 +26,24 @@ def get_gen_info(html):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='col-9 tab-content')
     year = items.find(string='Год ввода дома в эксплуатацию')
-    year = year.find_parent('td').find_next().text.strip()
+    if year:
+        year = year.find_parent('td').find_next().text.strip()
     floors = items.find(string='Количество этажей, ед.')
-    floors = floors.find_parent('td').find_next().text.strip()
+    if floors:
+        floors = floors.find_parent('td').find_next().text.strip()
     updating = items.find(
         string='По данным Фонда ЖКХ информация последний раз '
                'актуализировалась:'
     )
-    updating = updating.find_parent('td').find_next().text.strip()
+    if updating:
+        updating = updating.find_parent('td').find_next().text.strip()
     series = items.find(string='Серия, тип постройки здания')
-    series = series.find_parent('td').find_next().text.strip()
+    if series:
+        series = series.find_parent('td').find_next().text.strip()
     type_of_building = items.find(string='Тип дома')
-    type_of_building = type_of_building.find_parent('td').find_next_siblings()
-    type_of_building = type_of_building[-1].text.strip()
+    if type_of_building:
+        type_of_building = type_of_building.find_parent('td').find_next_siblings()
+        type_of_building = type_of_building[-1].text.strip()
     emergency = items.find(string='Факт признания дома аварийным')
     if emergency:
         emergency = emergency.find_parent('td')
@@ -48,9 +53,11 @@ def get_gen_info(html):
         cadastre = cadastre.find_parent('td').find_next_siblings()
         cadastre = cadastre[-1].text.strip()
     floor = items.find(string='Стены и перекрытия. Тип перекрытий')
-    floor = floor.find_parent('td').find_next_siblings()[-1].text.strip()
+    if floor:
+        floor = floor.find_parent('td').find_next_siblings()[-1].text.strip()
     walls = items.find(string='Стены и перекрытия. Материал несущих стен')
-    walls = walls.find_parent('td').find_next_siblings()[-1].text.strip()
+    if walls:
+        walls = walls.find_parent('td').find_next_siblings()[-1].text.strip()
     data = {
         'year': year,
         'floors': floors,
@@ -87,15 +94,9 @@ def parse(query):
         if html_gen_info.status_code == 200:
             data = get_gen_info(html_gen_info.text)
             return data
-            # with open(r'result.txt', 'a') as file:
-            #     file.write(f'{data}\n')
         else:
             print('Сайт не отвечает.')
             return
     else:
         print('Не удалось получить данные о доме.')
         return
-
-# query = 'Татарстан г. Калининград ул. Лесная '
-
-# print(parse(query))

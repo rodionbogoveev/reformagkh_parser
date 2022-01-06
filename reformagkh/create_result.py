@@ -1,5 +1,6 @@
 import sqlite3
 
+from data_analysis import analysis
 
 def create(data, last_id):
     conn = sqlite3.connect('reformagkh.db')
@@ -19,5 +20,7 @@ def create(data, last_id):
 
     conn.commit()
     conn.close()
+
     print('Данные записаны.\n')
+    analysis()
     return

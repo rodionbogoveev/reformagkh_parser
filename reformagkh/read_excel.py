@@ -1,7 +1,7 @@
 import openpyxl
 
 
-def open_excel():
+def read_excel():
     data = openpyxl.open(r'test_data.xlsx', read_only=True)
     sheet = data.active
     for row in range(2, sheet.max_row + 1):
@@ -37,8 +37,9 @@ def open_excel():
                 address += f'{query[i]} '
         query['address'] = address
 
-        with open('queryset.txt', 'a') as file:
+        with open('excel_data.txt', 'a') as file:
             file.write(f'{query}\n')
 
 
-open_excel()
+if __name__ == '__main__':
+    read_excel()
