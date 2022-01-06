@@ -2,6 +2,7 @@ import sqlite3
 
 from data_analysis import analysis
 
+
 def create(data, last_id):
     conn = sqlite3.connect('reformagkh.db')
     cursor = conn.cursor()

@@ -42,7 +42,9 @@ def get_gen_info(html):
         series = series.find_parent('td').find_next().text.strip()
     type_of_building = items.find(string='Тип дома')
     if type_of_building:
-        type_of_building = type_of_building.find_parent('td').find_next_siblings()
+        type_of_building = type_of_building.find_parent(
+            'td'
+        ).find_next_siblings()
         type_of_building = type_of_building[-1].text.strip()
     emergency = items.find(string='Факт признания дома аварийным')
     if emergency:
