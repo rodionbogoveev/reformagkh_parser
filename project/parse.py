@@ -72,7 +72,7 @@ def parse(query):
     if html_house.status_code == 200:
         links = get_links(html_house.text)
     else:
-        print('Сайт не отвечает')
+        print('Сайт не отвечает.')
     if len(links) > 10:
         print('Слишком большая выборка, уточните данные о доме.')
         link = None
@@ -86,9 +86,16 @@ def parse(query):
         html_gen_info = get_html(URL + link)
         if html_gen_info.status_code == 200:
             data = get_gen_info(html_gen_info.text)
-            with open(r'result.txt', 'a') as file:
-                file.write(f'{data}\n')
+            return data
+            # with open(r'result.txt', 'a') as file:
+            #     file.write(f'{data}\n')
         else:
-            print('Сайт не отвечает')
+            print('Сайт не отвечает.')
+            return
     else:
         print('Не удалось получить данные о доме.')
+        return
+
+# query = 'Татарстан г. Калининград ул. Лесная '
+
+# print(parse(query))
