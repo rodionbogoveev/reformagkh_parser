@@ -2,7 +2,10 @@ import sqlite3
 
 
 def create_db():
-    """Создание базы данных."""
+    """
+    Функция создания базы данных.
+    Исполнить этот файл, если база данных не создана.
+    """
     conn = sqlite3.connect('reformagkh.db')
     cursor = conn.cursor()
 

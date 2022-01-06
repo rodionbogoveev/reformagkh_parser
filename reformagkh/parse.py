@@ -9,11 +9,13 @@ HEADERS = {'user-agent': UserAgent().random, 'accept': '*/*'}
 
 
 def get_html(url, query=None):
+    """Получение объекта html."""
     html = requests.get(url, headers=HEADERS, params=query)
     return html
 
 
 def get_links(html):
+    """Извлечение ссылки на страницу дома."""
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('a', class_='text-dark')
     links = []
@@ -22,7 +24,8 @@ def get_links(html):
     return links
 
 
-def get_gen_info(html):
+def get_info(html):
+    """Извлечение необходимой информации о доме."""
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find('div', class_='col-9 tab-content')
     year = items.find(string='Год ввода дома в эксплуатацию')
@@ -75,7 +78,7 @@ def get_gen_info(html):
 
 
 def parse(query):
-    # Получаем ссылку на запрашиваемый дом
+    """Функция создания http запроса и получения результата парсинга."""
     a = quote(query)
     html_house = get_html(f'https://www.reformagkh.ru/search/houses?query={a}')
     if html_house.status_code == 200:
@@ -90,11 +93,10 @@ def parse(query):
         link = None
     else:
         link = links[0].replace('view', 'passport')
-    # Получаем данные о доме
     if link:
-        html_gen_info = get_html(URL + link)
-        if html_gen_info.status_code == 200:
-            data = get_gen_info(html_gen_info.text)
+        html_info = get_html(URL + link)
+        if html_info.status_code == 200:
+            data = get_info(html_info.text)
             return data
         else:
             print('Сайт не отвечает.')

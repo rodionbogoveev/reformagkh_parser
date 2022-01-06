@@ -2,6 +2,7 @@ import openpyxl
 
 
 def read_excel():
+    """Функция чтения тестовых данных из excel."""
     data = openpyxl.open(r'test_data.xlsx', read_only=True)
     sheet = data.active
     for row in range(2, sheet.max_row + 1):

@@ -4,6 +4,7 @@ from data_analysis import analysis
 
 
 def create(data, last_id):
+    """Функция создания записи в таблице result."""
     conn = sqlite3.connect('reformagkh.db')
     cursor = conn.cursor()
 
