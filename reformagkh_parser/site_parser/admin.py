@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Result, Source
+
+admin.site.register(Source)
+admin.site.register(Result)

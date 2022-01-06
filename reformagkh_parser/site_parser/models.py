@@ -28,6 +28,13 @@ class Source(models.Model):
 
 
 class Result(models.Model):
+    source = models.ForeignKey(
+        Source,
+        verbose_name='Источник',
+        on_delete=models.SET_NULL,
+        null=True,
+
+    )
     year = models.PositiveSmallIntegerField(
         verbose_name='Год ввода дома в эксплуатацию',
         blank=True,
